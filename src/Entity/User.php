@@ -19,6 +19,15 @@ class User extends BaseUser
      */
     protected $id;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="User", inversedBy="id")
+     * @ORM\JoinTable(name="user_has_users",
+     *      joinColumns={@ORM\JoinColumn(name="user", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="users", referencedColumnName="id")}
+     *      )
+     */
+    protected $users;
+
     public function __construct()
     {
         parent::__construct();

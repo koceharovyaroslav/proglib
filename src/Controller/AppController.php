@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,23 +18,62 @@ class AppController extends AbstractController
      */
     public function index(Request $request)
     {
-        $title = 'Hello world!';
+        return $this->render('app/index.html.twig', []);
+    }
 
-        return $this->render('index.html.twig', [
-            'title' => $title,
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @Route("/users-list", name="all_users")
+     */
+    public function usersList(Request $request)
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        /** @var User[] $users */
+        $users = $this->getDoctrine()->getRepository(User::class)->getOtherUsers($user->getId());
+
+        return $this->render('app/users_list.html.twig', [
+            'users' => $users
         ]);
     }
 
     /**
      * @param Request $request
+     * @param User $user
      *
-     * @Route("/all-users", name="all_users")
+     * @Route("/add-user/{id}", name="add_user")
+     * @ParamConverter("user", class="App\Entity\User")
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function allUsers(Request $request)
+    public function addUserToList(Request $request, User $user)
     {
-        $user = $request->getUser();
-        $users = $this->getDoctrine()->getRepository(User::class);
+        $em = $this->getDoctrine()->getManager();
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+        $currentUser->addUser($user);
+        $em->persist($currentUser);
+        $em->flush();
+        return $this->redirectToRoute('all_users');
+    }
 
-
+    /**
+     * @param Request $request
+     * @param User $user
+     *
+     * @Route("/delete-user/{id}", name="delete_user")
+     * @ParamConverter("user", class="App\Entity\User")
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function deleteUserFromList(Request $request, User $user)
+    {
+        $em = $this->getDoctrine()->getManager();
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+        $currentUser->removeUser($user);
+        $em->persist($currentUser);
+        $em->flush();
+        return $this->redirectToRoute('all_users');
     }
 }

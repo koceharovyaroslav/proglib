@@ -32,7 +32,7 @@ class AppController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
         /** @var User[] $users */
-        $users = $this->getDoctrine()->getRepository(User::class)->getOtherUsers($user->getId());
+        $users = $this->getDoctrine()->getRepository(User::class)->getOtherUsers($user);
 
         return $this->render('app/users_list.html.twig', [
             'users' => $users

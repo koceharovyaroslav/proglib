@@ -13,11 +13,15 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
-    public function getOtherUsers(int $userId): array
+    /**
+     * @param User $user
+     * @return array
+     */
+    public function getOtherUsers(User $user): array
     {
         $qb = $this->createQueryBuilder('u')
-            ->where('u.id != :user_id')
-            ->setParameter('user_id', $userId)
+            ->where('u != :user')
+            ->setParameter('user', $user)
             ->getQuery()
         ;
 

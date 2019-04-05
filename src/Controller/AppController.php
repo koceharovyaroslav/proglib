@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Post;
 use App\Entity\User;
+use App\Repository\PostRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,21 +13,29 @@ use Symfony\Component\Routing\Annotation\Route;
 class AppController extends AbstractController
 {
     /**
-     * @param Request $request
+     * @param PostRepository $postRepositiry
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @Route("/", name="index")
      */
-    public function index(Request $request)
+    public function index(PostRepository $postRepositiry)
     {
-        return $this->render('app/index.html.twig', []);
+        /** @var Post $posts */
+        $posts = $postRepositiry->findBy(
+            ['user' => $this->getUser()->getSignedUsersIds()],
+            ['dateCreated' => 'DESC' ]
+        );
+
+        return $this->render('app/index.html.twig', [
+            'posts' => $posts
+        ]);
     }
 
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      *
-     * @Route("/users-list", name="all_users")
+     * @Route("/users-list", name="users_list")
      */
     public function usersList(Request $request)
     {
@@ -55,7 +65,7 @@ class AppController extends AbstractController
         $currentUser->addUser($user);
         $em->persist($currentUser);
         $em->flush();
-        return $this->redirectToRoute('all_users');
+        return $this->redirectToRoute('users_list');
     }
 
     /**
@@ -74,6 +84,14 @@ class AppController extends AbstractController
         $currentUser->removeUser($user);
         $em->persist($currentUser);
         $em->flush();
-        return $this->redirectToRoute('all_users');
+        return $this->redirectToRoute('users_list');
+    }
+
+    /**
+     * @Route("/profile", name="user_profile")
+     */
+    public function profile()
+    {
+        return $this->render('app/profile.html.twig');
     }
 }

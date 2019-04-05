@@ -1,5 +1,9 @@
 {% extends "base.html.twig" %}
 
+{% block navbar %}
+    {% include 'app/not_login_menu.html.twig' %}
+{% endblock %}
+
 {% block content %}
     <main role="main" class="container">
         {{ form_start(form, {'method': 'post', 'action': path('fos_user_registration_register'), 'attr': {'class': 'fos_user_registration_register'}}) }}

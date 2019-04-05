@@ -1,0 +1,33 @@
+{% extends "base.html.twig" %}
+
+{% block navbar %}
+    {% include 'app/not_login_menu.html.twig' %}
+{% endblock %}
+{% block content %}
+    <main role="main" class="container">
+        <div class="center">
+        <form action="{{ path("fos_user_security_check") }}" method="post">
+            {% if csrf_token %}
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+            {% endif %}
+
+            <div class="form-group row">
+                <label for="username" class="col-sm-2 col-form-label">Username</label>
+                <div class="col-sm-10">
+                    <input type="text" id="username" name="_username" value="{{ last_username }}" required="required"
+                           autocomplete="username" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="password" class="col-sm-2 col-form-label">Password</label>
+                <div class="col-sm-10">
+                    <input type="password" id="password" name="_password" required="required"
+                           autocomplete="current-password" class="form-control" />
+                </div>
+            </div>
+
+            <input class="btn btn-primary" type="submit" id="_submit" name="_submit" value="Log In" />
+        </form>
+        </div>
+    </main>
+{% endblock %}

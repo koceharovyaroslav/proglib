@@ -7,9 +7,9 @@
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 {{ user.username }}
                 {% if user in app.user.users %}
-                    <a class="btn btn-danger" href="{{ path('delete_user', {'id': user.id}) }}" role="button">Delete</a>
+                    <a class="btn btn-danger" href="{{ path('delete_user', {'id': user.id}) }}" role="button">Unfollow</a>
                 {% else %}
-                    <a class="btn btn-primary" href="{{ path('add_user', {'id': user.id}) }}" role="button">Add</a>
+                    <a class="btn btn-primary" href="{{ path('add_user', {'id': user.id}) }}" role="button">Follow</a>
                 {% endif %}
             </li>
         {% endfor %}

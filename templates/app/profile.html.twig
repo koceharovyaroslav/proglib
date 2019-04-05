@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    {% set curentUser = app.user %}
+<main role="main" class="container">
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-6">
+            <div class="well well-sm">
+                <div class="row">
+                    <div class="col-sm-6 col-md-4">
+                        <img src="{{ asset('app/img/project/no_avatar.png') }}" alt="" class="img-rounded img-responsive">
+                    </div>
+                    <div class="col-sm-6 col-md-8">
+                        <h4>{{ curentUser.username }}</h4>
+                        <p>
+                            email: {{ curentUser.email }}
+                            <br>
+                            {{ curentUser.lastLogin|date('Y-m-d H:i:s') }}
+                        </p>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                <span>Options</span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="{{ path('fos_user_profile_edit') }}">Edit profile</a></li>
+                                <li><a href="{{ path('post_new') }}">Add post</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

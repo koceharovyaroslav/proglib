@@ -74,6 +74,19 @@ class User extends BaseUser
     }
 
     /**
+     * @return array
+     */
+    public function getSignedUsersIds(): array
+    {
+        $usersIds = array();
+        foreach ($this->getUsers() as $user){
+            $usersIds[] = $user->getId();
+        }
+
+        return $usersIds;
+    }
+
+    /**
      * @return Collection|Post[]
      */
     public function getPosts(): Collection
